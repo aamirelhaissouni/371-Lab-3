@@ -42,8 +42,23 @@ def multiplicative_inverse(e, phi):
     Returns d such that (d*e) % phi == 1
     """
     # TODO: implement Extended Euclidean Algorithm
+    p = phi
 
+    x0, x1 = 0, 1
+    while e > 1:
+        quotient = phi // e
+        phi, e = e, phi % e
+        x0, x1 = x1 - quotient * x0, x0
 
+    if e == 0:
+        print("No inverse exists")
+
+    if x1 < 0:
+        x1+=p
+
+    d = x1
+
+    return d
     pass
 
 
@@ -53,6 +68,14 @@ def is_prime(num):
     Return True if prime, False otherwise.
     """
     # TODO: implement primality check
+    if num == 0 or num == 1:
+        return True
+
+    for i in range(2, num/2 + 1):
+        if (num%i == 0):
+            return False
+    return True
+
     pass
 
 
