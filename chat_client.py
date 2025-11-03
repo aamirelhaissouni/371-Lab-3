@@ -48,9 +48,13 @@ def main():
             break
 
         # TODO: Encrypt msg with RSA
+        encrypted_msg = encrypt(public, msg)
         # TODO: Convert cipher list -> comma string
+        cipher_str = ",".join(map(str, encrypted_msg))
         # TODO: Send ciphertext to server
+        client.sendall(f"CIPHER:{cipher_str}".encode("utf-8"))
         # TODO: Buzz
+        
 
 
     client.close()
