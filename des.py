@@ -347,10 +347,15 @@ class des():
         else:
             return self.run(key, text, DECRYPT, padding)
     def compute_s_box(self, block, round):
+        row = block[0] * 2 + block[5] # takes rows from first and last bit
+        col = block[1] * 8 + block[2] * 4 + block[3] * 2 + block[4] # takes column from middle 4 bits
+
+        val = S_BOX[round][row][col] # looks up value in S-box
+
+        return binvalue(val, 4) # converts to 4 bit binary
         """
         Compute S-Box substitution for a 6-bit block.
         Input: block (list of 6 bits), round (0..7)
         Output: list of 4 bits
         """
         # TODO: Implement S-Box lookup
-        pass
