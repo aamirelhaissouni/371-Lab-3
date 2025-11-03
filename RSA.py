@@ -21,6 +21,7 @@ Notes:
 """
 
 import random
+import math
 
 def gcd(a, b):
     """
@@ -39,9 +40,10 @@ def gcd(a, b):
 def multiplicative_inverse(e, phi):
     """
     Compute the modular inverse of e modulo phi.
-    Returns d such that (d*e) % phi == 1
-    """
+    Returns d such that (d*e) % phi == 1 """
+
     # TODO: implement Extended Euclidean Algorithm
+
     p = phi
 
     x0, x1 = 0, 1
@@ -68,10 +70,11 @@ def is_prime(num):
     Return True if prime, False otherwise.
     """
     # TODO: implement primality check
-    if num == 0 or num == 1:
-        return True
 
-    for i in range(2, num/2 + 1):
+    if num < 2: #0 and 1
+        return False
+
+    for i in range(2, int(math.sqrt(num)+ 1)):
         if (num%i == 0):
             return False
     return True
@@ -92,6 +95,24 @@ def generate_keypair(p, q):
     # 2. Compute phi = (p-1)*(q-1)
     # 3. Choose e such that gcd(e, phi) = 1
     # 4. Compute d = multiplicative_inverse(e, phi)
+
+    if(is_prime(p) != True):
+        print(f"Error: {p} is not a prime number.")
+        return None
+    elif(is_prime(q) != True):
+        print(f"Error: {q} is not a prime number.")
+        return None
+
+    n = p*q
+    phi = (p-1)*(q-1)
+
+    e = int(random.randint(2, phi - 1))
+    while(gcd(e,phi) != 1):
+        print("Error with key generation, trying again....")
+        e = int(random.randint(2, phi - 1))
+
+    d = multiplicative_inverse(e, phi)
+    return ((e,n), (d, n))
     pass
 
 
@@ -101,6 +122,14 @@ def encrypt(pk, plaintext):
     Plaintext is a string; return a list of integers (ciphertext).
     """
     # TODO: implement RSA encryption
+    ciphertext = []
+    e, n = pk
+
+    for character in plaintext:
+        num = ord(character)
+        ciphertext.append((num**e)%n)
+
+    return ciphertext
     pass
 
 
@@ -110,6 +139,13 @@ def decrypt(pk, ciphertext):
     Ciphertext is a list of integers; return a string (plaintext).
     """
     # TODO: implement RSA decryption
+    plaintext = ""
+    d, n = pk
+    for num in ciphertext:
+        decrypted_num = (num**d) % n
+        character = chr(decrypted_num)
+        plaintext += character
+    return plaintext
     pass
 
 

@@ -62,10 +62,14 @@ def main():
                     continue
 
                 # TODO: Parse ciphertext string
+                _, cipher_str = message.split(":", 1)
+                ciphertext = [int(x) for x in cipher_str.split(",")]
                 # TODO: Decrypt with RSA
+                plaintext = decrypt(client_public_key, ciphertext)
                 # TODO: Print plaintext
+                print(f"[chat_server] Decrypted Message: {plaintext}")
                 # TODO: Flash LED
-                pass
+                flash_led()
 
             else:
                 print(f"[chat_server] Unknown message format: {message}")
