@@ -302,6 +302,16 @@ class des():
 
     
     def generatekeys(self):
+        self.keys = []
+        key = string_to_bit_array(self.password) # converts key to bit array
+        key = self.permut(key, CP_1) # initial permutation (64 -> 56 bits)
+
+        g, d = nsplit(key, 28) # split into halves (g = left, d = right)
+        
+        for i in range(16):
+            g, d = self.shift(g, d, SHIFT[i]) # shifts halves based on shift schedule
+            tmp = self.permut(g + d, CP_2) # recombine and compression (56 bits -> 48 bits)
+            self.keys.append(tmp)
         """
         Generate 16 round keys from the initial key.
         You must:
