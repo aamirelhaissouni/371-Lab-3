@@ -17,11 +17,16 @@ from RSA import decrypt
 
 # --- GPIO Setup (TODO: complete this section) ---
 # TODO: Choose the correct BCM pin for LED
+LED_PIN = 27
 # TODO: Open gpiochip and claim output for the LED
+h = lgpio.gpiochip_open(0)
+lgpio.gpio_claim_output(h, LED_PIN)
 
 def flash_led(duration=1.0):
     """TODO: Turn LED on, sleep, then off."""
-    pass
+    lgpio.gpio_write(h, LED_PIN, 1) # led on
+    time.sleep(duration)
+    lgpio.gpio_write(h, LED_PIN, 0) # led off
 
 
 # --- Socket setup ---

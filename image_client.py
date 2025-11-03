@@ -19,11 +19,16 @@ from des import des
 
 # --- GPIO Setup (TODO: complete this section) ---
 # TODO: Choose the correct BCM pin for the buzzer
+BUZZER_PIN = 17
 # TODO: Open gpiochip and claim output for the buzzer
+h = lgpio.gpiochip_open(0)
+lgpio.gpio_claim_output(h, BUZZER_PIN)
 
 def buzz(duration=0.3):
     """TODO: Buzzer ON -> sleep -> OFF"""
-    pass
+    lgpio.gpio_write(h, BUZZER_PIN, 1) # buzzer on
+    time.sleep(duration)
+    lgpio.gpio_write(h, BUZZER_PIN, 0) # buzzer off
 
 # --- RSA setup ---
 p, q = 3557, 2579

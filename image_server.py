@@ -19,11 +19,18 @@ from des import des
 
 # --- GPIO Setup (TODO: complete this section) ---
 # TODO: Choose the correct BCM pin for the LED
+LED_PIN = 18
 # TODO: Open gpiochip and claim output for the LED
+h = lgpio.gpiochip_open(0)
+lgpio.gpio_claim_output(h, LED_PIN)
 
 def flash_led(times=2, duration=0.3):
     """TODO: LED ON/OFF blinking"""
-    pass
+    for _ in range(times):
+        lgpio.gpio_write(h, LED_PIN, 1) # led on
+        time.sleep(duration)
+        lgpio.gpio_write(h, LED_PIN, 0) # led off
+        time.sleep(duration)
 
 
 # --- Socket setup ---
@@ -75,7 +82,7 @@ def main():
                     # TODO: Decrypt using DES
                     # TODO: Save as penguin_decrypted.jpg
                     # TODO: Flash LED
-                    pass
+                    flash_led()
 
                 else:
                     print(f"[image_server] Unknown message: {message}")
