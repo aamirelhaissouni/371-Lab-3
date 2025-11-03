@@ -142,21 +142,24 @@ SHIFT = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
 
 
 def string_to_bit_array(text):
-    """
-    Convert a string into a list of bits.
-    Example: 'A' -> [0,1,0,0,0,0,0,1]
-    """
+    result = []
+    for c in text:
+        bits = bin(ord(c))[2:]
+        bits = '00000000'[len(bits):] + bits
+        result.extend([int(b) for b in bits])
+    return result
+
     # TODO: Implement string to bit array conversion
-    pass
 
 
 def bit_array_to_string(array):
-    """
-    Convert a list of bits into a string.
-    Example: [0,1,0,0,0,0,0,1] -> 'A'
-    """
+    chars = []
+    for b in range(len(array) // 8):
+        byte = array[b*8:(b+1)*8]
+        chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
+    return ''.join(chars)
+
     # TODO: Implement bit array to string conversion
-    pass
 
 
 def binvalue(val, bitsize):
@@ -294,8 +297,8 @@ class des():
         """
         Apply bitwise XOR between two lists of bits.
         """
+        return [a ^ b for a, b in zip(t1, t2)]
         # TODO: Implement XOR
-        pass
 
     
     def generatekeys(self):
