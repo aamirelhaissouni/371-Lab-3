@@ -36,20 +36,16 @@ def gcd(a, b):
 
 
 def multiplicative_inverse(e, phi):
-    a, b = e, phi
-    x0, x1 = 1, 0
+    """
+    Compute the modular inverse of e modulo phi.
+    Returns d such that (d*e) % phi == 1
 
-    while b != 0:
-        q = a // b
-        a, b = b, a - q*b
-        x0, x1 = x1, x0 - q*x1
-
-    if a != 1:
+    """
+    if gcd(e, phi) != 1:
         return None
-    inv = x0 % phi
+    d = pow(e, -1, phi) ##built in EEA function (stack overflow)
 
-    return inv
-
+    return d
 
 def is_prime(num):
     """
@@ -84,17 +80,14 @@ def generate_keypair(p, q):
     n = p*q
     phi = (p-1)*(q-1)
 
-    for e in [3,5,7,13,19,23,139,149,229,251,257]:
-        if gcd(e, phi) == 1:
-            break
-    else:
+    e = 8143257
+    if gcd(e, phi) != 1:
         e = int(random.randint(2, phi - 1))
-        while(gcd(e,phi) != 1):
+        while(gcd(e, phi) != 1):
             e = int(random.randint(2, phi - 1))
 
     d = multiplicative_inverse(e, phi)
     return ((e,n), (d, n))
-
 
 def encrypt(pk, plaintext):
     """

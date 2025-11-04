@@ -53,11 +53,12 @@ def main():
             break
 
         # TODO: Encrypt msg with RSA
-        encrypted_msg = encrypt(public, msg)
+        encrypted_msg = encrypt(private, msg)
         # TODO: Convert cipher list -> comma string
         cipher_str = ",".join(map(str, encrypted_msg))
         # TODO: Send ciphertext to server
         client.sendall(f"CIPHER:{cipher_str}".encode("utf-8"))
+        print(f"[chat_client] Sent cipher: {encrypted_msg}")
         # TODO: Buzz
         buzz()
 
