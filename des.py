@@ -149,8 +149,6 @@ def string_to_bit_array(text):
         result.extend([int(b) for b in bits])
     return result
 
-    # TODO: Implement string to bit array conversion
-
 
 def bit_array_to_string(array):
     chars = []
@@ -158,8 +156,6 @@ def bit_array_to_string(array):
         byte = array[b*8:(b+1)*8]
         chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
     return ''.join(chars)
-
-    # TODO: Implement bit array to string conversion
 
 
 def binvalue(val, bitsize):
@@ -298,10 +294,18 @@ class des():
         Apply bitwise XOR between two lists of bits.
         """
         return [a ^ b for a, b in zip(t1, t2)]
-        # TODO: Implement XOR
 
     
     def generatekeys(self):
+        """
+        Generate 16 round keys from the initial key.
+        You must:
+        1. Convert the key into a bit array
+        2. Apply the initial permutation (CP_1)
+        3. Split into left (g) and right (d) halves
+        4. Apply SHIFT schedule and recombine
+        5. Apply compression permutation (CP_2) to produce 16 subkeys
+        """
         self.keys = []
         key = string_to_bit_array(self.password) # converts key to bit array
         key = self.permut(key, CP_1) # initial permutation (64 -> 56 bits)
@@ -312,17 +316,6 @@ class des():
             g, d = self.shift(g, d, SHIFT[i]) # shifts halves based on shift schedule
             tmp = self.permut(g + d, CP_2) # recombine and compression (56 bits -> 48 bits)
             self.keys.append(tmp)
-        """
-        Generate 16 round keys from the initial key.
-        You must:
-        1. Convert the key into a bit array
-        2. Apply the initial permutation (CP_1)
-        3. Split into left (g) and right (d) halves
-        4. Apply SHIFT schedule and recombine
-        5. Apply compression permutation (CP_2) to produce 16 subkeys
-        """
-        # TODO: Implement key schedule
-        pass
 
     def shift(self, g, d, n): #Shift a list of the given value
         return g[n:] + g[:n], d[n:] + d[:n]
@@ -358,4 +351,3 @@ class des():
         Input: block (list of 6 bits), round (0..7)
         Output: list of 4 bits
         """
-        # TODO: Implement S-Box lookup

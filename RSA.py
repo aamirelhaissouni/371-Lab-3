@@ -27,7 +27,6 @@ def gcd(a, b):
     """
     Compute the greatest common divisor of a and b.
     """
-    # TODO: implement Euclidean algorithm
 
     while b!=0:
         remainder = a%b
@@ -42,7 +41,6 @@ def multiplicative_inverse(e, phi):
     Compute the modular inverse of e modulo phi.
     Returns d such that (d*e) % phi == 1 """
 
-    # TODO: implement Extended Euclidean Algorithm
 
     p = phi
 
@@ -69,7 +67,6 @@ def is_prime(num):
     Check if a number is prime.
     Return True if prime, False otherwise.
     """
-    # TODO: implement primality check
 
     if num < 2: #0 and 1
         return False
@@ -89,12 +86,6 @@ def generate_keypair(p, q):
     - public = (e, n)
     - private = (d, n)
     """
-    # TODO: implement RSA keypair generation
-    # Steps:
-    # 1. Compute n = p * q
-    # 2. Compute phi = (p-1)*(q-1)
-    # 3. Choose e such that gcd(e, phi) = 1
-    # 4. Compute d = multiplicative_inverse(e, phi)
 
     if(is_prime(p) != True):
         print(f"Error: {p} is not a prime number.")
@@ -121,7 +112,6 @@ def encrypt(pk, plaintext):
     Encrypt plaintext using key pk = (e or d, n).
     Plaintext is a string; return a list of integers (ciphertext).
     """
-    # TODO: implement RSA encryption
     ciphertext = []
     e, n = pk
 
@@ -138,7 +128,6 @@ def decrypt(pk, ciphertext):
     Decrypt ciphertext using key pk = (e or d, n).
     Ciphertext is a list of integers; return a string (plaintext).
     """
-    # TODO: implement RSA decryption
     plaintext = ""
     d, n = pk
     for num in ciphertext:

@@ -15,6 +15,7 @@ import socket
 import time
 import lgpio
 
+from RSA import decrypt
 from des import des
 
 # --- GPIO Setup (TODO: complete this section) ---
@@ -66,21 +67,44 @@ def main():
 
                 if message.startswith("KEY:"):
                     # TODO: Parse e,n and store client_public_key
-                    pass
+                    _, key_str = message.split(":", 1)
+                    e_str, n_str = key_str.split(",", 1)
+                    client_public_key = (int(e_str), int(n_str))
+                    print(f"[image_server] Received client PUBLIC key: {client_public_key}")
 
 
                 elif message.startswith("DESKEY:"):
                     # TODO: Decrypt DES key using RSA
-                    pass
+                    if client_public_key is None:
+                        print("[image_server] Error: no public key yet.")
+                        continue
 
+                    _, encrypted_key_str = message.split(":", 1)
+                    encrypted_key = [int(c) for c in encrypted_key_str.split(",")]
+                    des_key = decrypt(client_public_key, encrypted_key)
+                    print(f"[image_server] Decrypted DES key: {des_key}")
 
                 elif message.startswith("IMAGE:"):
                     if des_key is None:
                         print("[image_server] Error: no DES key yet.")
                         continue
                     # TODO: Parse encrypted image values
+                    _, encrypted_str = message.split(":")
+                    encrypted_values = [int(v) for v in encrypted_str.split(",")]
+                    
+                    encrypted_image = "".join(chr(v) for v in encrypted_values)
+
                     # TODO: Decrypt using DES
+                    ciphertext = des()
+                    decrypted_text = ciphertext.decrypt(des_key, encrypted_image, padding=True, cbc=True)
+
+                    decrypted_bytes = decrypted_bytes.encode("latin-1")
+
                     # TODO: Save as penguin_decrypted.jpg
+                    with open("penguin_decrypted.jpg", "wb") as f:
+                        f.write(decrypted_bytes)
+                        print("[image_server] Image decrypted and saved as penguin_decrypted.jpg")
+
                     # TODO: Flash LED
                     flash_led()
 

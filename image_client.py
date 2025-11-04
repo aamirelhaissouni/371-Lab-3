@@ -14,7 +14,7 @@ import socket
 import time
 import lgpio
 
-from RSA import generate_keypair
+from RSA import generate_keypair, encrypt
 from des import des
 
 # --- GPIO Setup (TODO: complete this section) ---
@@ -43,8 +43,11 @@ with open("penguin.jpg", "rb") as f:
     image_bytes = f.read()
 
 # TODO: Convert image_bytes to string (latin-1 safe)
+image_to_string = image_bytes.decode("latin-1")
 # TODO: Encrypt with DES (use padding=True, cbc=True)
+encrypted_image = cipher.encrypt(des_key, image_to_string, padding=True, cbc=True)
 # TODO: Encrypt DES key with RSA
+encrypted_des_key = encrypt(public, des_key)
 
 # --- Socket setup ---
 HOST = "127.0.0.1"
@@ -57,12 +60,25 @@ def main():
 
     # Step 1: Send RSA public key
     # TODO
+    e, n = public
+    key_msg = f"KEY:{e},{n}\n"
+    client.sendall(key_msg.encode("utf-8"))
+    print(f"[image_client] Sent public key: (e={e}, n={n})")
 
     # Step 2: Send encrypted DES key
     # TODO
+    encrypted_des_key_str = ",".join(str(c) for c in encrypted_des_key)
+    des_key_msg = f"DESKEY:{encrypted_des_key_str}\n"
+    client.sendall(des_key_msg.encode("utf-8"))
+    print("[image_client] Sent encrypted DES key")
 
     # Step 3: Send encrypted image
     # TODO
+    encrypted_integers = [ord(c) for c in encrypted_image]
+    encrypted_string = ",".join(str(i) for i in encrypted_integers)
+    image_msg = f"IMAGE:{encrypted_string}\n"
+    client.sendall(image_msg.encode("utf-8"))
+    print("[image_client] Sent encrypted image")
 
     # Feedback
     buzz()
