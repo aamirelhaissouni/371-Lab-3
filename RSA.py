@@ -33,33 +33,22 @@ def gcd(a, b):
         a = b
         b = remainder
     return a
-    pass
 
 
 def multiplicative_inverse(e, phi):
-    """
-    Compute the modular inverse of e modulo phi.
-    Returns d such that (d*e) % phi == 1 """
+    a, b = e, phi
+    x0, x1 = 1, 0
 
+    while b != 0:
+        q = a // b
+        a, b = b, a - q*b
+        x0, x1 = x1, x0 - q*x1
 
-    p = phi
+    if a != 1:
+        return None
+    inv = x0 % phi
 
-    x0, x1 = 0, 1
-    while e > 1:
-        quotient = phi // e
-        phi, e = e, phi % e
-        x0, x1 = x1 - quotient * x0, x0
-
-    if e == 0:
-        print("No inverse exists")
-
-    if x1 < 0:
-        x1+=p
-
-    d = x1
-
-    return d
-    pass
+    return inv
 
 
 def is_prime(num):
@@ -75,8 +64,6 @@ def is_prime(num):
         if (num%i == 0):
             return False
     return True
-
-    pass
 
 
 def generate_keypair(p, q):
@@ -97,14 +84,16 @@ def generate_keypair(p, q):
     n = p*q
     phi = (p-1)*(q-1)
 
-    e = int(random.randint(2, phi - 1))
-    while(gcd(e,phi) != 1):
-        print("Error with key generation, trying again....")
+    for e in [3,5,7,13,19,23,139,149,229,251,257]:
+        if gcd(e, phi) == 1:
+            break
+    else:
         e = int(random.randint(2, phi - 1))
+        while(gcd(e,phi) != 1):
+            e = int(random.randint(2, phi - 1))
 
     d = multiplicative_inverse(e, phi)
     return ((e,n), (d, n))
-    pass
 
 
 def encrypt(pk, plaintext):
@@ -117,10 +106,9 @@ def encrypt(pk, plaintext):
 
     for character in plaintext:
         num = ord(character)
-        ciphertext.append((num**e)%n)
+        ciphertext.append(pow(num, e, n))
 
     return ciphertext
-    pass
 
 
 def decrypt(pk, ciphertext):
@@ -131,11 +119,10 @@ def decrypt(pk, ciphertext):
     plaintext = ""
     d, n = pk
     for num in ciphertext:
-        decrypted_num = (num**d) % n
+        decrypted_num = pow(num, d, n)
         character = chr(decrypted_num)
         plaintext += character
     return plaintext
-    pass
 
 
 # --- Example test case ---
@@ -143,17 +130,17 @@ if __name__ == "__main__":
     print("RSA Test Example")
 
     # Example primes (small for testing)
-    p, q = 61, 53
+    p, q = 3557, 2579
     public, private = generate_keypair(p, q)
 
-    print("Public key:", public)
-    print("Private key:", private)
+    print("Public key:\n", public)
+    print("Private key:\n", private)
 
     message = "HELLO"
-    print("Original message:", message)
+    print("Original message:\n", message)
 
     encrypted_msg = encrypt(public, message)
-    print("Encrypted message:", encrypted_msg)
+    print("Encrypted message:\n", encrypted_msg)
 
     decrypted_msg = decrypt(private, encrypted_msg)
-    print("Decrypted message:", decrypted_msg)
+    print("Decrypted message:\n", decrypted_msg)
