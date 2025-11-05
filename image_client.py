@@ -47,7 +47,7 @@ image_to_string = image_bytes.decode("latin-1")
 # TODO: Encrypt with DES (use padding=True, cbc=True)
 encrypted_image = cipher.encrypt(des_key, image_to_string, padding=True, cbc=True)
 # TODO: Encrypt DES key with RSA
-encrypted_des_key = encrypt(public, des_key)
+encrypted_des_key = encrypt(private, des_key)
 
 # --- Socket setup ---
 HOST = "127.0.0.1"
