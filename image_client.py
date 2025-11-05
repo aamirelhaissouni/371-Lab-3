@@ -46,6 +46,12 @@ with open("penguin.jpg", "rb") as f:
 image_to_string = image_bytes.decode("latin-1")
 # TODO: Encrypt with DES (use padding=True, cbc=True)
 encrypted_image = cipher.encrypt(des_key, image_to_string, padding=True, cbc=True)
+
+encryped_bytes = encrypted_image.encode("latin-1")
+with open("penguin_encrypted.jpg", "wb") as f:
+    f.write(encryped_bytes)
+print("[image_client] Saved encrypted image as penguin_encrypted.jpg")
+
 # TODO: Encrypt DES key with RSA
 encrypted_des_key = encrypt(private, des_key)
 
